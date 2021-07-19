@@ -16,6 +16,9 @@ CREATE TABLE IF NOT EXISTS agencia(
 	FOREIGN KEY(banco_numero) REFERENCES banco (numero)
 );
 
+DROP TABLE CLIENTE CASCADE;
+DROP TABLE CONTA_CORRENTE CASCADE;
+
 CREATE TABLE IF NOT EXISTS cliente(
 	numero BIGSERIAL PRIMARY KEY,
 	nome VARCHAR(120) NOT NULL,
@@ -23,7 +26,6 @@ CREATE TABLE IF NOT EXISTS cliente(
 	ativo BOOLEAN NOT NULL DEFAULT TRUE,
 	data_criacao TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
-
 CREATE TABLE IF NOT EXISTS conta_corrente(
 	banco_numero INTEGER NOT NULL,
 	agencia_numero INTEGER NOT NULL,
@@ -34,7 +36,7 @@ CREATE TABLE IF NOT EXISTS conta_corrente(
 	data_criacao TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (banco_numero, agencia_numero, numero, digito, cliente_numero),
 	FOREIGN KEY (banco_numero, agencia_numero) REFERENCES agencia(banco_numero,numero),
-	FOREIGN KEY (cliente_numero) REFERENCES cliente (numero)
+	FOREIGN KEY (cliente_numero) REFERENCES cliente(numero)
 );
 
 CREATE TABLE IF NOT EXISTS tipo_transacao(
@@ -44,8 +46,8 @@ CREATE TABLE IF NOT EXISTS tipo_transacao(
 	data_criacao TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS clientes_transacoes(
-	if BIGSERIAL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS cliente_transacoes(
+	id BIGSERIAL PRIMARY KEY,
 	banco_numero INTEGER NOT NULL,
 	agencia_numero INTEGER NOT NULL,
 	conta_corrente_numero BIGINT NOT NULL,
@@ -55,4 +57,6 @@ CREATE TABLE IF NOT EXISTS clientes_transacoes(
 	valor NUMERIC(15,2) NOT NULL,
 	data_criacao TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	FOREIGN KEY (banco_numero, agencia_numero, conta_corrente_numero, conta_corrente_digito, cliente_numero) REFERENCES conta_corrente(banco_numero, agencia_numero, numero, digito, cliente_numero)
-)
+);
+
+
